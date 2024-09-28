@@ -4,3 +4,6 @@ testfiles/*.bin
 misc
 frames.js
 .*.swp
+
+# Ignore build directory by cmake
+/build
