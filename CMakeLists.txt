@@ -6,6 +6,12 @@ project(dump1090 C)
 # Include FetchContent module
 include(FetchContent)
 
+FetchContent_Declare(
+  libusb
+  GIT_REPOSITORY https://github.com/libusb/libusb.git 
+  GIT_TAG v1.0.27
+)
+
 # Fetch librtlsdr
 FetchContent_Declare(
   librtlsdr
@@ -14,6 +20,7 @@ FetchContent_Declare(
 )
 
 # Make librtlsdr available
+FetchContent_MakeAvailable(libusb)
 FetchContent_MakeAvailable(librtlsdr)
 
 # Add include directories
