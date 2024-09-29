@@ -1,0 +1,6 @@
+[submodule "third_party/librtlsdr"]
+	path = third_party/librtlsdr
+	url = https://github.com/steve-m/librtlsdr.git
+[submodule "third_party/libusb-cmake"]
+	path = third_party/libusb-cmake
+	url = https://github.com/libusb/libusb-cmake.git
