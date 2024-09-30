@@ -54,7 +54,14 @@ else()
 endif()
 
 # Add the executable
-add_executable(dump1090 dump1090.c anet.c)
+add_executable(dump1090 WIN32
+  dump1090.c 
+  anet.c
+  interactive.c
+  mode_ac.c
+  mode_s.c
+  net_io.c
+  )
 
 target_include_directories(dump1090 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
   ${CMAKE_CURRENT_BINARY_DIR}/install/include
@@ -62,7 +69,8 @@ target_include_directories(dump1090 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
 
 # Link libraries
 if(MSVC)
-  target_link_libraries(dump1090 rtlsdr pthreadVSE3)
+  message(STATUS "Looking for librtlsdr_static.lib here: ${CMAKE_BINARY_DIR}/install/lib/rtlsdr_static.lib")
+  target_link_libraries(dump1090 ${CMAKE_BINARY_DIR}/install/lib/rtlsdr_static.lib pthreadVSE3 ws2_32)
 else()
   target_link_libraries(dump1090 rtlsdr pthread m)
 endif()
