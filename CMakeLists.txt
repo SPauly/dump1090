@@ -47,11 +47,18 @@ else()
   )
 endif() #pkg_config
 
-# Set compiler flags
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g -Wall -W")
+if(MSVC)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /O2 /W3")
+else()
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O2 -g -Wall -W")
+endif()
 
 # Add the executable
 add_executable(dump1090 dump1090.c anet.c)
 
 # Link libraries
-target_link_libraries(dump1090 rtlsdr pthread m)
+if(MSVC)
+  target_link_libraries(dump1090 rtlsdr pthreadVSE3)
+else()
+  target_link_libraries(dump1090 rtlsdr pthread m)
+endif()
