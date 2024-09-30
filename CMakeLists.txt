@@ -56,6 +56,10 @@ endif()
 # Add the executable
 add_executable(dump1090 dump1090.c anet.c)
 
+target_include_directories(dump1090 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
+  ${CMAKE_CURRENT_BINARY_DIR}/install/include
+)
+
 # Link libraries
 if(MSVC)
   target_link_libraries(dump1090 rtlsdr pthreadVSE3)
