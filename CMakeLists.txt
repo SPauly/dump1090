@@ -3,18 +3,21 @@ cmake_minimum_required(VERSION 3.10)
 # Project name and language
 project(dump1090 C)
 
-find_package(Threads REQUIRED)
 find_package(PkgConfig)
 
-set(DUMP1090_FIRST_BUILD ON CACHE BOOL "First build of dump1090")
+set(DUMP1090_FIRST_BUILD OFF CACHE BOOL "First build of dump1090")
 
 set(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_BINARY_DIR}/install CACHE PATH "Install path" FORCE)
 
 if(DUMP1090_FIRST_BUILD)
+  message(STATUS "First build of dump1090")
+
   # build libusb for use in librtlsdr and install it
+  message(STATUS "Building libusb")
   add_subdirectory(third_party/libusb-cmake)
 
   if(MSVC)
+      message(STATUS "Building pthreads-win32 for MSVC")
       include(FetchContent)
       FetchContent_Declare(
         pthreads-win32
@@ -26,16 +29,17 @@ if(DUMP1090_FIRST_BUILD)
     endif()
 else()
 
-endif()
-
 if(PKG_CONFIG_FOUND)
-  message(STATUS "Not supported with pkg-config")
+  message(STATUS "Not yet supported with pkg-config")
 else()
+  message(STATUS "Regular build of dump1090")
+
   # Set libusb directories manually
   set(LIBUSB_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/install/include/libusb-1.0)
   set(LIBUSB_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/install/lib/libusb-1.0.lib)
+  message(STATUS "Setting libusb directories manually to ${LIBUSB_INCLUDE_DIRS} and ${LIBUSB_LIBRARIES}")
 
-
+  message(STATUS "Building librtlsdr")
   include(ExternalProject)
   ExternalProject_Add(librtlsdr
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/librtlsdr
@@ -74,3 +78,5 @@ if(MSVC)
 else()
   target_link_libraries(dump1090 rtlsdr pthread m)
 endif()
+
+endif() #DUMP1090_FIRST_BUILD
