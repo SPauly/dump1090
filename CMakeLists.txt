@@ -40,6 +40,7 @@ else()
   ExternalProject_Add(librtlsdr
     SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/third_party/librtlsdr
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+      -DINSTALL_UDEV_RULES=$<IF:$<BOOL:${MSVC}>,OFF,ON>
       -DLIBUSB_INCLUDE_DIRS=${LIBUSB_INCLUDE_DIRS}
       -DLIBUSB_LIBRARIES=${LIBUSB_LIBRARIES}
       -DTHREADS_PTHREADS_INCLUDE_DIR=${CMAKE_BINARY_DIR}/install/include
@@ -54,7 +55,7 @@ else()
 endif()
 
 # Add the executable
-add_executable(dump1090 WIN32
+add_executable(dump1090
   dump1090.c 
   anet.c
   interactive.c
@@ -69,8 +70,7 @@ target_include_directories(dump1090 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
 
 # Link libraries
 if(MSVC)
-  message(STATUS "Looking for librtlsdr_static.lib here: ${CMAKE_BINARY_DIR}/install/lib/rtlsdr_static.lib")
-  target_link_libraries(dump1090 ${CMAKE_BINARY_DIR}/install/lib/rtlsdr_static.lib pthreadVSE3 ws2_32)
+  target_link_libraries(dump1090 ${CMAKE_BINARY_DIR}/install/lib/rtlsdr.lib pthreadVSE3 ws2_32)
 else()
   target_link_libraries(dump1090 rtlsdr pthread m)
 endif()
