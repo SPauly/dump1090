@@ -74,7 +74,7 @@ target_include_directories(dump1090 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/
 
 # Link libraries
 if(MSVC)
-  target_link_libraries(dump1090 ${CMAKE_BINARY_DIR}/install/lib/rtlsdr.lib pthreadVSE3 ws2_32)
+  target_link_libraries(dump1090 ${CMAKE_BINARY_DIR}/install/lib/rtlsdr.lib ${CMAKE_BINARY_DIR}/install/lib/pthreadVSE3.lib ws2_32)
 else()
   target_link_libraries(dump1090 rtlsdr pthread m)
 endif()
