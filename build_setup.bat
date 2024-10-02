@@ -23,3 +23,7 @@ echo Starting regular build...
 cmake -S . -B build/ -DDUMP1090_FIRST_BUILD=OFF
 cmake --build build/ --config Debug
 cmake --build build/ --config Release
+
+echo Copying rtlsdr.dll to relevant folders 
+xcopy /f /d "build/install/bin/rtlsdr.dll" "build/Debug/"
+xcopy /f /d "build/install/bin/rtlsdr.dll" "build/Release/"
