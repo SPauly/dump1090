@@ -236,12 +236,29 @@ int anetWrite(int fd, char *buf, int count)
 }
 
 static int anetListen(char *err, int s, struct sockaddr *sa, socklen_t len) {
+    int opt = 1;
+    if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, sizeof(opt)) < 0) {
+        anetSetError(err, "setsockopt(SO_REUSEADDR): %s", strerror(errno));
+        return ANET_ERR;
+    }
     if (bind(s,sa,len) == -1) {
 #ifdef _WIN32
-        errno = WSAGetLastError();
+    DWORD errCode = WSAGetLastError();
+    char *errMsg = NULL;
+    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+                  NULL, errCode, 0, (LPSTR)&errMsg, 0, NULL);
+    anetSetError(err, "bind: %s", errMsg);
+    LocalFree(errMsg);
+#else
+    anetSetError(err, "bind: %s", strerror(errno));
 #endif
-        anetSetError(err, "bind: %s", strerror(errno));
-        close(s);
+
+#ifdef _WIN32
+    closesocket(s);
+#else
+    close(s);
+#endif
+
         return ANET_ERR;
     }
 
