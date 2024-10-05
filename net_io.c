@@ -169,7 +169,11 @@ void modesFreeClient(struct client *c) {
 // Close the client connection and mark it as closed
 //
 void modesCloseClient(struct client *c) {
+#ifndef _WIN32
 	close(c->fd);
+#else
+    closesocket(c->fd);
+#endif
     if (c->service == Modes.sbsos) {
         if (Modes.stat_sbs_connections) Modes.stat_sbs_connections--;
     } else if (c->service == Modes.ros) {
@@ -788,7 +792,11 @@ int handleHTTPRequest(struct client *c, char *p) {
         }
         
         if (fd != -1) {
+#ifndef _WIN32
             close(fd);
+#else
+            closesocket(fd);
+#endif
         }
     }
 
